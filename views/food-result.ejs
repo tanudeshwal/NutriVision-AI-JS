@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Food Analysis Result | NutriVision AI</title>
-
+    <title>Food Result | NutriVision AI</title>
     <link rel="stylesheet" href="/css/style.css">
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -51,7 +46,6 @@
             display: grid;
             grid-template-columns: 0.85fr 1.15fr;
             gap: 25px;
-            align-items: stretch;
         }
 
         .result-panel {
@@ -87,31 +81,13 @@
             margin: 15px 0;
         }
 
-        .confidence-score {
-            font-size: 35px;
-            font-weight: bold;
+        .ai-badge {
+            display: inline-block;
+            background: #e1f5eb;
             color: #087f68;
-            margin: 10px 0;
-        }
-
-        progress {
-            width: 100%;
-            height: 14px;
-            border: none;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #dcece5;
-            accent-color: #159d80;
-        }
-
-        progress::-webkit-progress-bar {
-            background: #dcece5;
-            border-radius: 20px;
-        }
-
-        progress::-webkit-progress-value {
-            background: linear-gradient(90deg, #087f68, #42c6a2);
-            border-radius: 20px;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: bold;
         }
 
         .serving-box {
@@ -121,15 +97,6 @@
             border-radius: 12px;
             margin: 20px 0;
             font-weight: bold;
-        }
-
-        .quantity-input {
-            width: 100%;
-            padding: 14px;
-            margin-top: 12px;
-            border: 1px solid #b9d9cc;
-            border-radius: 10px;
-            font-size: 18px;
         }
 
         .nutrition-grid {
@@ -178,10 +145,7 @@
             line-height: 1.6;
         }
 
-        .predictions-section,
-        .correction-section,
-        .health-section,
-        .save-section {
+        .section-spacing {
             margin-top: 25px;
         }
 
@@ -195,6 +159,7 @@
             background: #edf7f3;
             padding: 20px;
             border-radius: 15px;
+            border: 1px solid #d3e9df;
         }
 
         .prediction-card h3 {
@@ -202,8 +167,13 @@
             margin-bottom: 10px;
         }
 
-        .prediction-card p {
-            margin: 10px 0;
+        .prediction-rank {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #087f68;
+            color: white;
+            font-size: 13px;
         }
 
         .correction-controls {
@@ -221,6 +191,15 @@
             background: #f5fbf8;
             color: #243e35;
             font-size: 16px;
+        }
+
+        .quantity-input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: 1px solid #b9d9cc;
+            border-radius: 10px;
+            font-size: 18px;
         }
 
         .result-button {
@@ -264,13 +243,6 @@
             overflow-wrap: anywhere;
         }
 
-        #correctionMessage,
-        #saveFoodMessage {
-            margin-top: 15px;
-            color: #087f68;
-            font-weight: bold;
-        }
-
         .health-layout {
             display: flex;
             align-items: center;
@@ -290,7 +262,7 @@
             background: #e1eee7;
         }
 
-        .health-circle-inner {
+        .health-inner {
             width: 145px;
             height: 145px;
             border-radius: 50%;
@@ -301,35 +273,23 @@
             justify-content: center;
         }
 
-        .health-circle-inner h1 {
+        .health-inner h1 {
             font-size: 45px;
             margin: 0;
         }
 
-        .health-circle-inner p {
-            margin: 8px 0;
-        }
-
-        .benefits-box {
+        .benefit-box {
             background: #eff8f4;
             padding: 20px;
             border-radius: 15px;
             margin-top: 20px;
         }
 
-        .suggestions-box {
+        .suggestion-box {
             background: #fff8e7;
             padding: 20px;
             border-radius: 15px;
             margin-top: 20px;
-        }
-
-        .benefits-box h3 {
-            color: #087f68;
-        }
-
-        .suggestions-box h3 {
-            color: #806322;
         }
 
         .meal-grid {
@@ -340,98 +300,50 @@
         }
 
         .meal-option {
-            display: block;
+            padding: 20px 10px;
+            background: #f0f8f4;
+            border: 1px solid #d3e9df;
+            border-radius: 15px;
+            text-align: center;
             cursor: pointer;
         }
 
-        .meal-option input {
-            position: absolute;
-            opacity: 0;
-        }
-
-        .meal-card {
-            padding: 20px 10px;
-            border: 2px solid #d3e9df;
-            background: #f0f8f4;
-            border-radius: 15px;
-            text-align: center;
-            transition: 0.3s;
-        }
-
-        .meal-card:hover {
-            background: #dff3e9;
-        }
-
-        .meal-option input:checked + .meal-card {
-            background: #d5f3e5;
-            border-color: #087f68;
-            color: #087f68;
-        }
-
-        .meal-option input:focus-visible + .meal-card {
-            outline: 3px solid #087f68;
+        .meal-option:has(input:checked) {
+            background: #d8f2e7;
+            border: 2px solid #087f68;
         }
 
         .meal-icon {
-            font-size: 35px;
+            font-size: 30px;
             display: block;
             margin-bottom: 10px;
         }
 
         .save-preview {
-            background: #eff8f4;
-            border: 1px solid #d3e9df;
-            border-radius: 15px;
+            background: #e7f5ed;
             padding: 20px;
+            border-radius: 15px;
             margin: 20px 0;
+            line-height: 1.8;
         }
 
-        .save-preview h3 {
-            color: #087f68;
-            margin-top: 0;
-        }
-
-        .save-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .save-preview-grid div {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .save-preview-grid strong {
-            display: block;
-            color: #087f68;
-            font-size: 20px;
-            margin-top: 8px;
-        }
-
-        .save-button {
-            width: 100%;
-            padding: 18px;
-            font-size: 18px;
+        #correctionMessage,
+        #saveFoodMessage {
+            margin-top: 15px;
+            font-weight: bold;
         }
 
         @media (max-width: 900px) {
-
-            .result-layout,
-            .prediction-grid {
+            .result-layout {
                 grid-template-columns: 1fr;
             }
 
-            .meal-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .prediction-grid {
+                grid-template-columns: 1fr;
             }
-
         }
 
         @media (max-width: 600px) {
-
             .result-container {
                 width: 94%;
                 margin: 15px auto;
@@ -450,7 +362,7 @@
             }
 
             .nutrition-grid,
-            .save-preview-grid {
+            .meal-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
@@ -462,1054 +374,994 @@
             .result-actions {
                 flex-direction: column;
             }
-
         }
-
     </style>
-
 </head>
 
 <body>
 
-    <main class="result-container"
-        id="resultContainer"
-        data-nutrition="<%= JSON.stringify(nutrition || null) %>"
-        data-health="<%= JSON.stringify(healthScore || null) %>">
+<main
+    class="result-container"
+    id="resultContainer"
+    data-nutrition="<%= JSON.stringify(nutrition || null) %>"
+    data-health="<%= JSON.stringify(healthScore || null) %>"
+>
 
-        <header class="result-header">
+    <header class="result-header">
 
-            <p>🌿 NUTRIVISION AI | AI POWERED FOOD INTELLIGENCE</p>
+        <p>🌿 NUTRIVISION AI | AI POWERED FOOD INTELLIGENCE</p>
 
-            <h1>Food Analysis Result 🍽️</h1>
+        <h1>Food Analysis Result 🍽️</h1>
 
-            <p>
-                Discover your food, understand its nutritional
-                value and track your daily meals.
+        <p>
+            Discover your food and understand its nutritional value
+            with AI-powered food recognition.
+        </p>
+
+    </header>
+
+    <div class="result-layout">
+
+        <section class="result-panel food-panel">
+
+            <h2>AI Food Recognition</h2>
+
+            <img
+                src="/uploads/<%= imageName %>"
+                alt="Uploaded Food"
+                class="food-image"
+            >
+
+            <h2 class="food-name" id="displayFoodName">
+                <%= foodName %>
+            </h2>
+
+            <p id="recognitionStatus">
+                AI Predicted Food
             </p>
 
-        </header>
+            <div id="confidenceSection">
 
-        <div class="result-layout">
-
-            <!-- AI FOOD RECOGNITION -->
-
-            <section class="result-panel food-panel">
-
-                <h2>AI Food Recognition</h2>
-
-                <img
-                    src="/uploads/<%= imageName %>"
-                    alt="Uploaded Food"
-                    class="food-image"
-                >
-
-                <h2 class="food-name" id="displayFoodName">
-                    <%= foodName %>
-                </h2>
-
-                <p id="recognitionStatus">
-                    AI Predicted Food
-                </p>
-
-                <div id="confidenceSection">
-
-                    <p>AI Match Score</p>
-
-                    <div class="confidence-score">
-                        <%= confidence %>%
-                    </div>
-
-                    <progress
-                        value="<%= confidence %>"
-                        max="100">
-                    </progress>
-
-                </div>
+                <span class="ai-badge">
+                    ✨ Google Gemini AI
+                </span>
 
                 <p class="small-note">
-                    Original AI Prediction: <%= foodName %>
-                </p>
-
-                <p class="small-note">
-                    File Name: <%= originalName %>
-                </p>
-
-            </section>
-
-            <!-- NUTRITION INFORMATION -->
-
-            <section class="result-panel">
-
-                <h2>🥗 Nutrition Information</h2>
-
-                <p>
-                    Estimated nutritional breakdown of your food.
-                </p>
-
-                <div class="serving-box">
-
-                    🍽️ Serving Size:
-
-                    <span id="servingValue">
-                        <%= nutrition ? nutrition.serving : "Unavailable" %>
-                    </span>
-
-                </div>
-
-                <div class="serving-box">
-
-                    <h3>🍽️ Select Serving Quantity</h3>
-
-                    <label for="servingQuantity">
-                        Number of Servings
-                    </label>
-
-                    <input
-                        type="number"
-                        id="servingQuantity"
-                        class="quantity-input"
-                        value="1"
-                        min="0.25"
-                        max="20"
-                        step="0.25"
-                    >
-
-                    <p id="quantityMessage"></p>
-
-                </div>
-
-                <div class="nutrition-grid">
-
-                    <div class="nutrition-card">
-
-                        <div class="nutrition-icon">🔥</div>
-
-                        <p>Calories</p>
-
-                        <h3 id="caloriesValue">--</h3>
-
-                        <p>kcal</p>
-
-                    </div>
-
-                    <div class="nutrition-card">
-
-                        <div class="nutrition-icon">💪</div>
-
-                        <p>Protein</p>
-
-                        <h3 id="proteinValue">--</h3>
-
-                        <p>Macronutrient</p>
-
-                    </div>
-
-                    <div class="nutrition-card">
-
-                        <div class="nutrition-icon">🌾</div>
-
-                        <p>Carbohydrates</p>
-
-                        <h3 id="carbsValue">--</h3>
-
-                        <p>Macronutrient</p>
-
-                    </div>
-
-                    <div class="nutrition-card">
-
-                        <div class="nutrition-icon">🥑</div>
-
-                        <p>Fat</p>
-
-                        <h3 id="fatValue">--</h3>
-
-                        <p>Total Fat</p>
-
-                    </div>
-
-                    <div class="nutrition-card">
-
-                        <div class="nutrition-icon">🥦</div>
-
-                        <p>Fiber</p>
-
-                        <h3 id="fiberValue">--</h3>
-
-                        <p>Dietary Fiber</p>
-
-                    </div>
-
-                    <div class="nutrition-card">
-
-                        <div class="nutrition-icon">🍬</div>
-
-                        <p>Sugar</p>
-
-                        <h3 id="sugarValue">--</h3>
-
-                        <p>Total Sugar</p>
-
-                    </div>
-
-                </div>
-
-                <div class="nutrition-note">
-
-                    ℹ️ Nutrition values are approximate estimates
-                    based on a reference serving. Actual values
-                    may vary depending on ingredients, cooking
-                    methods and portion size.
-
-                </div>
-
-            </section>
-
-        </div>
-
-        <!-- FOOD HEALTH SCORE -->
-
-        <section class="result-panel health-section">
-
-            <h2>🌿 Food Health Analysis</h2>
-
-            <div id="healthScoreContent">
-
-                <div id="healthDetails">
-
-                    <div class="health-layout">
-
-                        <div class="health-circle" id="healthCircle">
-
-                            <div class="health-circle-inner">
-
-                                <h1 id="healthScoreValue">--</h1>
-
-                                <p>Out of 100</p>
-
-                            </div>
-
-                        </div>
-
-                        <div>
-
-                            <h2 id="healthFoodName"></h2>
-
-                            <h3 id="healthRating"></h3>
-
-                            <p>Estimated Nutrition Score</p>
-
-                        </div>
-
-                    </div>
-
-                    <div class="benefits-box">
-
-                        <h3>💪 Nutrition Benefits</h3>
-
-                        <ul id="healthBenefits"></ul>
-
-                    </div>
-
-                    <div class="suggestions-box">
-
-                        <h3>💡 Nutrition Suggestions</h3>
-
-                        <ul id="healthSuggestions"></ul>
-
-                    </div>
-
-                </div>
-
-                <p id="healthUnavailable" hidden>
-                    Health analysis is currently unavailable.
+                    Best suggested match.
+                    Please confirm the food name before saving.
                 </p>
 
             </div>
 
             <p class="small-note">
+                Original AI Prediction: <%= foodName %>
+            </p>
 
-                This is an estimated nutrition score based on
-                available nutrition data, not a medically
-                validated health rating.
-
+            <p class="small-note">
+                File Name: <%= originalName %>
             </p>
 
         </section>
 
-        <!-- TOP 3 AI PREDICTIONS -->
+        <section class="result-panel">
 
-        <section class="result-panel predictions-section">
+            <h2>🥗 Nutrition Information</h2>
 
-            <h2>🤖 Top 3 AI Predictions</h2>
+            <p>
+                Estimated nutritional breakdown of your food.
+            </p>
 
-            <div class="prediction-grid">
+            <div class="serving-box">
 
-                <% topPredictions.forEach((item, index) => { %>
+                🍽️ Serving Size:
 
-                    <div class="prediction-card">
+                <span id="servingValue">
+                    <%= nutrition ? nutrition.serving : "Unavailable" %>
+                </span>
 
-                        <h3>
-                            <%= index + 1 %>.
-                            <%= item.foodName %>
-                        </h3>
+            </div>
 
-                        <p>
-                            <%= item.confidence %>% Match
-                        </p>
+            <div class="serving-box">
 
-                        <progress
-                            value="<%= item.confidence %>"
-                            max="100">
-                        </progress>
+                <h3>🍽️ Select Serving Quantity</h3>
 
-                    </div>
+                <label for="servingQuantity">
+                    Number of Servings
+                </label>
+
+                <input
+                    type="number"
+                    id="servingQuantity"
+                    class="quantity-input"
+                    value="1"
+                    min="0.25"
+                    max="20"
+                    step="0.25"
+                >
+
+                <p id="quantityMessage"></p>
+
+            </div>
+
+            <div class="nutrition-grid">
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🔥</div>
+
+                    <p>Calories</p>
+
+                    <h3 id="caloriesValue">
+                        <%= nutrition ? nutrition.calories : "--" %>
+                    </h3>
+
+                    <p>kcal</p>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">💪</div>
+
+                    <p>Protein</p>
+
+                    <h3 id="proteinValue">
+                        <%= nutrition ? nutrition.protein : "--" %>
+                    </h3>
+
+                    <p>grams</p>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🍞</div>
+
+                    <p>Carbohydrates</p>
+
+                    <h3 id="carbsValue">
+                        <%= nutrition ? nutrition.carbs : "--" %>
+                    </h3>
+
+                    <p>grams</p>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🥑</div>
+
+                    <p>Fat</p>
+
+                    <h3 id="fatValue">
+                        <%= nutrition ? nutrition.fat : "--" %>
+                    </h3>
+
+                    <p>grams</p>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🥦</div>
+
+                    <p>Fiber</p>
+
+                    <h3 id="fiberValue">
+                        <%= nutrition ? nutrition.fiber : "--" %>
+                    </h3>
+
+                    <p>grams</p>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🍬</div>
+
+                    <p>Sugar</p>
+
+                    <h3 id="sugarValue">
+                        <%= nutrition ? nutrition.sugar : "--" %>
+                    </h3>
+
+                    <p>grams</p>
+
+                </div>
+
+            </div>
+
+            <div class="nutrition-note">
+
+                ⚠️ Nutrition values are approximate estimates.
+                Actual values depend on ingredients, preparation
+                method and serving size.
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <section class="result-panel section-spacing">
+
+        <h2>💚 Food Health Analysis</h2>
+
+        <div id="healthScoreContent"></div>
+
+        <p class="small-note">
+            This score is based on an illustrative nutrition formula.
+            It is not a medical assessment.
+        </p>
+
+    </section>
+
+    <section class="result-panel section-spacing">
+
+        <h2>🤖 AI Food Predictions</h2>
+
+        <p>
+            Possible food matches suggested by Gemini AI.
+        </p>
+
+        <div class="prediction-grid">
+
+            <% topPredictions.forEach((prediction, index) => { %>
+
+                <div class="prediction-card">
+
+                    <span class="prediction-rank">
+
+                        <%= index === 0 ? "Best Match" : "Match " + (index + 1) %>
+
+                    </span>
+
+                    <h3>
+                        <%= prediction.foodName %>
+                    </h3>
+
+                    <button
+                        type="button"
+                        class="result-button prediction-button"
+                        data-food="<%= prediction.foodName %>"
+                    >
+                        Select Food
+                    </button>
+
+                </div>
+
+            <% }); %>
+
+        </div>
+
+        <p class="small-note">
+
+            Predictions are ranked suggestions, not measured
+            confidence percentages.
+
+        </p>
+
+    </section>
+
+    <section class="result-panel section-spacing">
+
+        <h2>✏️ Correct Food Recognition</h2>
+
+        <p>
+            If the AI prediction is incorrect, select the correct
+            food from our supported food database.
+        </p>
+
+        <div class="correction-controls">
+
+            <select id="correctFood" class="food-select">
+
+                <% foodLabels.forEach(food => { %>
+
+                    <option
+                        value="<%= food %>"
+                        <%= food === foodName ? "selected" : "" %>
+                    >
+
+                        <%= food %>
+
+                    </option>
 
                 <% }); %>
 
-            </div>
+            </select>
 
-            <p class="small-note">
+            <button
+                type="button"
+                id="updateButton"
+                class="result-button"
+                onclick="updateFood()"
+            >
+                Update Food
+            </button>
 
-                AI predictions may not always be accurate.
-                Match scores are relative to the available food labels.
+        </div>
 
-            </p>
+        <p id="correctionMessage" role="status"></p>
 
-        </section>
+    </section>
 
-        <!-- MANUAL FOOD CORRECTION -->
+    <section class="result-panel section-spacing">
 
-        <section class="result-panel correction-section">
+        <h2>📅 Save to Food Diary</h2>
 
-            <h2>✏️ Incorrect Food Prediction?</h2>
+        <p>
+            Select your meal type and save this food to your
+            daily nutrition dashboard.
+        </p>
+
+        <div class="meal-grid">
+
+            <label class="meal-option">
+
+                <span class="meal-icon">🌅</span>
+
+                <input
+                    type="radio"
+                    name="mealType"
+                    value="Breakfast"
+                >
+
+                Breakfast
+
+            </label>
+
+            <label class="meal-option">
+
+                <span class="meal-icon">🍛</span>
+
+                <input
+                    type="radio"
+                    name="mealType"
+                    value="Lunch"
+                >
+
+                Lunch
+
+            </label>
+
+            <label class="meal-option">
+
+                <span class="meal-icon">🥪</span>
+
+                <input
+                    type="radio"
+                    name="mealType"
+                    value="Snacks"
+                    checked
+                >
+
+                Snacks
+
+            </label>
+
+            <label class="meal-option">
+
+                <span class="meal-icon">🌙</span>
+
+                <input
+                    type="radio"
+                    name="mealType"
+                    value="Dinner"
+                >
+
+                Dinner
+
+            </label>
+
+        </div>
+
+        <div class="save-preview">
+
+            <strong>Food Diary Preview</strong>
 
             <p>
-                Select the correct food from our database
-                of <%= foodLabels.length %> foods.
+                Food:
+                <span id="previewFood"></span>
             </p>
-
-            <div class="correction-controls">
-
-                <select id="correctFood" class="food-select"
-                    aria-label="Select correct food">
-
-                    <% [...foodLabels].sort().forEach(food => { %>
-
-                        <option
-                            value="<%= food %>"
-                            <%= food === foodName ? "selected" : "" %>
-                        >
-                            <%= food %>
-                        </option>
-
-                    <% }); %>
-
-                </select>
-
-                <button
-                    type="button"
-                    id="updateButton"
-                    class="result-button"
-                    onclick="updateFood()">
-
-                    Update Food
-
-                </button>
-
-            </div>
-
-            <p id="correctionMessage" role="status"></p>
-
-        </section>
-
-        <!-- SAVE FOOD ANALYSIS -->
-
-        <section class="result-panel save-section">
-
-            <h2>📅 Save to Food Diary</h2>
 
             <p>
-
-                Save your food analysis and track your
-                daily nutrition on your personal dashboard.
-
+                Meal:
+                <span id="previewMeal"></span>
             </p>
 
-            <div class="save-preview">
+            <p>
+                Quantity:
+                <span id="previewQuantity"></span>
+            </p>
 
-                <h3 id="previewFoodName">
-                    <%= foodName %>
-                </h3>
+            <p>
+                Calories:
+                <span id="previewCalories"></span>
+            </p>
 
-                <p id="previewServing"></p>
+        </div>
 
-                <div class="save-preview-grid">
+        <button
+            type="button"
+            id="saveFoodButton"
+            class="result-button"
+            style="width:100%;"
+            onclick="saveFood()"
+        >
 
-                    <div>
-                        🔥 Calories
-                        <strong id="previewCalories">--</strong>
+            💾 Save Food Analysis
+
+        </button>
+
+        <p id="saveFoodMessage" role="status"></p>
+
+    </section>
+
+    <div class="result-actions">
+
+        <a href="/food-analysis" class="result-button">
+
+            📷 Analyze Another Food
+
+        </a>
+
+        <a href="/dashboard" class="result-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+    </div>
+
+</main>
+
+<script>
+
+    const container = document.getElementById("resultContainer");
+
+    let baseNutrition = JSON.parse(
+        container.dataset.nutrition
+    );
+
+    let currentHealthScore = JSON.parse(
+        container.dataset.health
+    );
+
+    let currentFoodName = document
+        .getElementById("displayFoodName")
+        .textContent.trim();
+
+    let isUpdating = false;
+    let isSaving = false;
+    let isSaved = false;
+
+    const quantityInput = document.getElementById(
+        "servingQuantity"
+    );
+
+    const foodSelect = document.getElementById(
+        "correctFood"
+    );
+
+    const updateButton = document.getElementById(
+        "updateButton"
+    );
+
+    const saveButton = document.getElementById(
+        "saveFoodButton"
+    );
+
+    function getMealType() {
+
+        return document.querySelector(
+            'input[name="mealType"]:checked'
+        ).value;
+
+    }
+
+    function validQuantity() {
+
+        const quantity = Number(quantityInput.value);
+
+        return Number.isFinite(quantity) &&
+            quantity >= 0.25 &&
+            quantity <= 20;
+
+    }
+
+    function calculate(value, quantity) {
+
+        return Number(
+            (Number(value) * quantity).toFixed(2)
+        );
+
+    }
+
+    function updateControls() {
+
+        const busy = isUpdating || isSaving || isSaved;
+
+        updateButton.disabled = busy;
+
+        quantityInput.disabled = busy;
+
+        foodSelect.disabled = busy;
+
+        saveButton.disabled =
+            busy ||
+            !validQuantity() ||
+            !baseNutrition ||
+            foodSelect.value !== currentFoodName;
+
+        document.querySelectorAll(
+            'input[name="mealType"], .prediction-button'
+        ).forEach(element => {
+
+            element.disabled = busy;
+
+        });
+
+    }
+
+    function updatePreview() {
+
+        document.getElementById(
+            "previewFood"
+        ).textContent = currentFoodName;
+
+        document.getElementById(
+            "previewMeal"
+        ).textContent = getMealType();
+
+        document.getElementById(
+            "previewQuantity"
+        ).textContent = validQuantity()
+            ? quantityInput.value + " serving(s)"
+            : "Invalid quantity";
+
+        document.getElementById(
+            "previewCalories"
+        ).textContent = baseNutrition && validQuantity()
+            ? calculate(
+                baseNutrition.calories,
+                Number(quantityInput.value)
+            ) + " kcal"
+            : "--";
+
+    }
+
+    function calculateNutrition() {
+
+        const quantity = Number(quantityInput.value);
+
+        const message = document.getElementById(
+            "quantityMessage"
+        );
+
+        const nutrients = [
+            "calories",
+            "protein",
+            "carbs",
+            "fat",
+            "fiber",
+            "sugar"
+        ];
+
+        if (!baseNutrition || !validQuantity()) {
+
+            message.textContent = !baseNutrition
+                ? "Nutrition information unavailable."
+                : "Enter a quantity between 0.25 and 20.";
+
+            nutrients.forEach(key => {
+
+                document.getElementById(
+                    key + "Value"
+                ).textContent = "--";
+
+            });
+
+            updatePreview();
+            updateControls();
+
+            return;
+
+        }
+
+        nutrients.forEach(key => {
+
+            document.getElementById(
+                key + "Value"
+            ).textContent = calculate(
+                baseNutrition[key],
+                quantity
+            );
+
+        });
+
+        message.textContent =
+            quantity + " × " + baseNutrition.serving;
+
+        updatePreview();
+
+        updateControls();
+
+    }
+
+    function updateHealthScore(health, foodName) {
+
+        const healthContainer = document.getElementById(
+            "healthScoreContent"
+        );
+
+        if (!health) {
+
+            healthContainer.textContent =
+                "Health analysis is currently unavailable.";
+
+            return;
+
+        }
+
+        healthContainer.innerHTML = `
+
+            <div class="health-layout">
+
+                <div class="health-circle" id="healthCircle">
+
+                    <div class="health-inner">
+
+                        <h1 id="healthScoreValue"></h1>
+
+                        <p>Out of 100</p>
+
                     </div>
 
-                    <div>
-                        💪 Protein
-                        <strong id="previewProtein">--</strong>
-                    </div>
+                </div>
 
-                    <div>
-                        🌾 Carbohydrates
-                        <strong id="previewCarbs">--</strong>
-                    </div>
+                <div>
+
+                    <h2 id="healthFoodName"></h2>
+
+                    <h3 id="healthRating"></h3>
+
+                    <p>Estimated Nutrition Score</p>
 
                 </div>
 
             </div>
 
-            <h3>Select Meal Type</h3>
+            <div class="benefit-box">
 
-            <div class="meal-grid">
+                <h3>💪 Nutrition Benefits</h3>
 
-                <label class="meal-option">
-
-                    <input
-                        type="radio"
-                        name="mealType"
-                        value="Breakfast"
-                    >
-
-                    <div class="meal-card">
-
-                        <span class="meal-icon">🌅</span>
-
-                        <strong>Breakfast</strong>
-
-                    </div>
-
-                </label>
-
-                <label class="meal-option">
-
-                    <input
-                        type="radio"
-                        name="mealType"
-                        value="Lunch"
-                    >
-
-                    <div class="meal-card">
-
-                        <span class="meal-icon">☀️</span>
-
-                        <strong>Lunch</strong>
-
-                    </div>
-
-                </label>
-
-                <label class="meal-option">
-
-                    <input
-                        type="radio"
-                        name="mealType"
-                        value="Snacks"
-                        checked
-                    >
-
-                    <div class="meal-card">
-
-                        <span class="meal-icon">☕</span>
-
-                        <strong>Snacks</strong>
-
-                    </div>
-
-                </label>
-
-                <label class="meal-option">
-
-                    <input
-                        type="radio"
-                        name="mealType"
-                        value="Dinner"
-                    >
-
-                    <div class="meal-card">
-
-                        <span class="meal-icon">🌙</span>
-
-                        <strong>Dinner</strong>
-
-                    </div>
-
-                </label>
+                <ul id="healthBenefits"></ul>
 
             </div>
 
-            <button
-                type="button"
-                id="saveFoodButton"
-                class="result-button save-button"
-                onclick="saveFood()">
+            <div class="suggestion-box">
 
-                💾 Save Food Analysis
+                <h3>💡 Nutrition Suggestions</h3>
 
-            </button>
+                <ul id="healthSuggestions"></ul>
 
-            <p id="saveFoodMessage" role="status"></p>
+            </div>
 
-        </section>
+        `;
 
-        <!-- ACTION BUTTONS -->
+        const score = Math.max(
+            0,
+            Math.min(100, Number(health.score) || 0)
+        );
 
-        <div class="result-actions">
+        const color = /^#[0-9a-f]{3,8}$/i.test(
+            health.color || ""
+        ) ? health.color : "#087f68";
 
-            <a href="/food-analysis" class="result-button">
+        document.getElementById(
+            "healthScoreValue"
+        ).textContent = score;
 
-                📷 Analyze Another Food
+        document.getElementById(
+            "healthScoreValue"
+        ).style.color = color;
 
-            </a>
+        document.getElementById(
+            "healthFoodName"
+        ).textContent = foodName;
 
-            <a href="/dashboard" class="result-button">
+        document.getElementById(
+            "healthRating"
+        ).textContent = health.rating || "Unavailable";
 
-                🏠 Back to Dashboard
+        document.getElementById(
+            "healthRating"
+        ).style.color = color;
 
-            </a>
+        document.getElementById(
+            "healthCircle"
+        ).style.background =
+            `conic-gradient(${color} ${score}%, #e1eee7 0)`;
 
-        </div>
+        function updateList(id, items, emptyMessage) {
 
-    </main>
+            const list = document.getElementById(id);
 
-    <script>
+            list.innerHTML = "";
 
-        const container = document.getElementById("resultContainer");
+            const values =
+                Array.isArray(items) && items.length
+                    ? items
+                    : [emptyMessage];
 
-        let baseNutrition = JSON.parse(container.dataset.nutrition);
+            values.forEach(item => {
 
-        const initialHealthScore = JSON.parse(container.dataset.health);
+                const li = document.createElement("li");
 
-        let currentFoodName = document
-            .getElementById("displayFoodName")
-            .textContent.trim();
+                li.textContent = item;
 
-        const quantityInput = document.getElementById("servingQuantity");
+                li.style.margin = "10px 0";
 
-        const saveButton = document.getElementById("saveFoodButton");
-
-        const updateButton = document.getElementById("updateButton");
-
-        const correctFood = document.getElementById("correctFood");
-
-        let foodSaved = false;
-
-        let isUpdating = false;
-
-        let isSaving = false;
-
-        // UPDATE BUTTON STATUS
-
-        function updateButtonStatus() {
-
-            const quantity = Number(quantityInput.value);
-
-            const validQuantity =
-                Number.isFinite(quantity) &&
-                quantity >= 0.25 &&
-                quantity <= 20;
-
-            saveButton.disabled =
-                foodSaved ||
-                isSaving ||
-                isUpdating ||
-                !baseNutrition ||
-                !validQuantity ||
-                correctFood.value !== currentFoodName;
-
-            updateButton.disabled =
-                foodSaved || isSaving || isUpdating;
-
-            correctFood.disabled =
-                foodSaved || isSaving || isUpdating;
-
-            quantityInput.disabled =
-                foodSaved || isSaving || isUpdating;
-
-            document.querySelectorAll(
-                'input[name="mealType"]'
-            ).forEach(input => {
-
-                input.disabled = foodSaved || isSaving;
+                list.appendChild(li);
 
             });
 
         }
 
-        // SERVING QUANTITY CALCULATION
+        updateList(
+            "healthBenefits",
+            health.benefits,
+            "No specific benefits flagged."
+        );
 
-        function calculateNutrition() {
+        updateList(
+            "healthSuggestions",
+            health.suggestions,
+            "No additional suggestions."
+        );
 
-            const quantity = Number(quantityInput.value);
+    }
 
-            const message = document.getElementById("quantityMessage");
+    async function updateFood() {
 
-            if (
-                !baseNutrition ||
-                !Number.isFinite(quantity) ||
-                quantity < 0.25 ||
-                quantity > 20
-            ) {
+        if (isUpdating || isSaving || isSaved) return;
 
-                message.textContent = !baseNutrition
-                    ? "Nutrition information unavailable."
-                    : "Please enter a quantity between 0.25 and 20 servings.";
+        const selectedFood = foodSelect.value;
 
-                message.style.color = "#c0392b";
+        const message = document.getElementById(
+            "correctionMessage"
+        );
 
-                [
-                    "caloriesValue",
-                    "proteinValue",
-                    "carbsValue",
-                    "fatValue",
-                    "fiberValue",
-                    "sugarValue",
-                    "previewCalories",
-                    "previewProtein",
-                    "previewCarbs",
-                    "previewServing"
-                ].forEach(id => {
+        isUpdating = true;
 
-                    document.getElementById(id).textContent = "--";
+        updateControls();
 
-                });
+        message.textContent =
+            "Updating nutrition information...";
 
-                updateButtonStatus();
+        try {
 
-                return;
+            const response = await fetch(
 
-            }
+                "/api/nutrition?food=" +
+                encodeURIComponent(selectedFood)
 
-            function calculate(value) {
+            );
 
-                return Number((value * quantity).toFixed(2));
+            if (!response.ok) {
+
+                throw new Error(
+                    "Nutrition data unavailable"
+                );
 
             }
 
-            const calories = calculate(baseNutrition.calories);
+            const data = await response.json();
 
-            const protein = calculate(baseNutrition.protein);
+            baseNutrition = data.nutrition;
 
-            const carbs = calculate(baseNutrition.carbs);
+            currentHealthScore = data.healthScore;
 
-            const fat = calculate(baseNutrition.fat);
+            currentFoodName = data.foodName;
 
-            const fiber = calculate(baseNutrition.fiber);
+            document.getElementById(
+                "displayFoodName"
+            ).textContent = currentFoodName;
 
-            const sugar = calculate(baseNutrition.sugar);
+            document.getElementById(
+                "servingValue"
+            ).textContent = baseNutrition.serving;
 
-            document.getElementById("caloriesValue")
-                .textContent = calories;
+            document.getElementById(
+                "recognitionStatus"
+            ).textContent = "Manually Selected Food";
 
-            document.getElementById("proteinValue")
-                .textContent = protein + " g";
+            document.getElementById(
+                "confidenceSection"
+            ).style.display = "none";
 
-            document.getElementById("carbsValue")
-                .textContent = carbs + " g";
+            quantityInput.value = 1;
 
-            document.getElementById("fatValue")
-                .textContent = fat + " g";
+            updateHealthScore(
+                currentHealthScore,
+                currentFoodName
+            );
 
-            document.getElementById("fiberValue")
-                .textContent = fiber + " g";
-
-            document.getElementById("sugarValue")
-                .textContent = sugar + " g";
+            calculateNutrition();
 
             message.textContent =
-                quantity + " × " + baseNutrition.serving;
+                "✓ Food and nutrition updated successfully!";
 
             message.style.color = "#087f68";
 
-            document.getElementById("previewFoodName")
-                .textContent = currentFoodName;
+        } catch (error) {
 
-            document.getElementById("previewServing")
-                .textContent = quantity + " × " + baseNutrition.serving;
+            message.textContent =
+                "Unable to update food. Please try again.";
 
-            document.getElementById("previewCalories")
-                .textContent = calories + " kcal";
+            message.style.color = "#c0392b";
 
-            document.getElementById("previewProtein")
-                .textContent = protein + " g";
+        } finally {
 
-            document.getElementById("previewCarbs")
-                .textContent = carbs + " g";
+            isUpdating = false;
 
-            updateButtonStatus();
+            updateControls();
 
         }
 
-        quantityInput.addEventListener("input", calculateNutrition);
+    }
 
-        correctFood.addEventListener("change", () => {
+    async function saveFood() {
 
-            const message = document.getElementById("correctionMessage");
+        if (isSaving || isUpdating || isSaved) return;
 
-            if (correctFood.value !== currentFoodName) {
+        const message = document.getElementById(
+            "saveFoodMessage"
+        );
 
-                message.textContent =
-                    "Click Update Food to apply your selection before saving.";
+        if (!baseNutrition || !validQuantity()) {
 
-            } else {
+            message.textContent =
+                "Please enter a valid serving quantity.";
 
-                message.textContent = "";
-
-            }
-
-            updateButtonStatus();
-
-        });
-
-        // HEALTH SCORE
-
-        function updateHealthScore(healthScore, foodName) {
-
-            const details = document.getElementById("healthDetails");
-
-            const unavailable = document.getElementById("healthUnavailable");
-
-            if (!healthScore) {
-
-                details.hidden = true;
-
-                unavailable.hidden = false;
-
-                return;
-
-            }
-
-            details.hidden = false;
-
-            unavailable.hidden = true;
-
-            document.getElementById("healthScoreValue")
-                .textContent = healthScore.score;
-
-            document.getElementById("healthScoreValue")
-                .style.color = healthScore.color;
-
-            document.getElementById("healthFoodName")
-                .textContent = foodName;
-
-            document.getElementById("healthRating")
-                .textContent = healthScore.rating;
-
-            document.getElementById("healthRating")
-                .style.color = healthScore.color;
-
-            document.getElementById("healthCircle")
-                .style.background =
-                `conic-gradient(
-                    ${healthScore.color} ${healthScore.score}%,
-                    #e1eee7 0
-                )`;
-
-            function updateList(id, items, emptyMessage) {
-
-                const list = document.getElementById(id);
-
-                list.innerHTML = "";
-
-                const values = Array.isArray(items) && items.length
-                    ? items
-                    : [emptyMessage];
-
-                values.forEach(item => {
-
-                    const li = document.createElement("li");
-
-                    li.textContent = item;
-
-                    li.style.margin = "10px 0";
-
-                    list.appendChild(li);
-
-                });
-
-            }
-
-            updateList(
-                "healthBenefits",
-                healthScore.benefits,
-                "No specific benefits flagged by the scoring formula."
-            );
-
-            updateList(
-                "healthSuggestions",
-                healthScore.suggestions,
-                "No additional suggestions from the scoring formula."
-            );
+            return;
 
         }
 
-        // MANUAL FOOD CORRECTION
+        if (foodSelect.value !== currentFoodName) {
 
-        async function updateFood() {
+            message.textContent =
+                "Please click Update Food before saving.";
 
-            if (foodSaved || isSaving || isUpdating) {
-                return;
-            }
-
-            const selectedFood = correctFood.value;
-
-            const message = document.getElementById("correctionMessage");
-
-            try {
-
-                isUpdating = true;
-
-                updateButtonStatus();
-
-                message.textContent =
-                    "Updating nutrition information...";
-
-                message.style.color = "#087f68";
-
-                const response = await fetch(
-
-                    "/api/nutrition?food=" +
-                    encodeURIComponent(selectedFood)
-
-                );
-
-                if (response.status === 401) {
-
-                    throw new Error(
-                        "Session expired. Please login again."
-                    );
-
-                }
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Nutrition information unavailable."
-                    );
-
-                }
-
-                const data = await response.json();
-
-                baseNutrition = data.nutrition;
-
-                currentFoodName = data.foodName;
-
-                document.getElementById("displayFoodName")
-                    .textContent = currentFoodName;
-
-                document.getElementById("servingValue")
-                    .textContent = baseNutrition.serving;
-
-                quantityInput.value = 1;
-
-                calculateNutrition();
-
-                updateHealthScore(
-                    data.healthScore,
-                    currentFoodName
-                );
-
-                document.getElementById("confidenceSection")
-                    .style.display = "none";
-
-                document.getElementById("recognitionStatus")
-                    .textContent = "Manually Selected Food";
-
-                message.textContent =
-                    "✓ Food and nutrition updated successfully!";
-
-                message.style.color = "#087f68";
-
-                document.getElementById("saveFoodMessage")
-                    .textContent = "";
-
-            } catch (error) {
-
-                message.textContent = error.message;
-
-                message.style.color = "#c0392b";
-
-            } finally {
-
-                isUpdating = false;
-
-                updateButtonStatus();
-
-            }
+            return;
 
         }
 
-        // SAVE FOOD TO MONGODB
+        const quantity = Number(quantityInput.value);
 
-        async function saveFood() {
+        const mealType = getMealType();
 
-            if (foodSaved || isSaving || isUpdating) {
-                return;
-            }
+        isSaving = true;
 
-            const message = document.getElementById("saveFoodMessage");
+        updateControls();
 
-            const quantity = Number(quantityInput.value);
+        saveButton.textContent = "Saving...";
 
-            const selectedMeal = document.querySelector(
-                'input[name="mealType"]:checked'
-            );
+        try {
 
-            if (!baseNutrition) {
+            const response = await fetch(
 
-                message.textContent =
-                    "Nutrition information unavailable.";
+                "/api/save-food",
 
-                message.style.color = "#c0392b";
-
-                return;
-
-            }
-
-            if (
-                !Number.isFinite(quantity) ||
-                quantity < 0.25 ||
-                quantity > 20
-            ) {
-
-                message.textContent =
-                    "Please enter a valid serving quantity.";
-
-                message.style.color = "#c0392b";
-
-                return;
-
-            }
-
-            if (correctFood.value !== currentFoodName) {
-
-                message.textContent =
-                    "Please update the selected food before saving.";
-
-                message.style.color = "#c0392b";
-
-                return;
-
-            }
-
-            if (!selectedMeal) {
-
-                message.textContent = "Please select a meal type.";
-
-                message.style.color = "#c0392b";
-
-                return;
-
-            }
-
-            try {
-
-                isSaving = true;
-
-                updateButtonStatus();
-
-                saveButton.textContent =
-                    "Saving Food Analysis...";
-
-                message.textContent =
-                    "Saving your food to the diary...";
-
-                message.style.color = "#087f68";
-
-                const response = await fetch("/api/save-food", {
+                {
 
                     method: "POST",
 
                     headers: {
-
                         "Content-Type": "application/json"
-
                     },
 
                     body: JSON.stringify({
 
                         foodName: currentFoodName,
 
-                        quantity: quantity,
+                        quantity,
 
-                        mealType: selectedMeal.value
+                        mealType
 
                     })
 
-                });
-
-                if (response.status === 401) {
-
-                    throw new Error(
-                        "Session expired. Please login again."
-                    );
-
                 }
 
-                const data = await response.json();
+            );
 
-                if (!response.ok || !data.success) {
+            const data = await response.json();
 
-                    throw new Error(
+            if (!response.ok) {
 
-                        data.message || "Unable to save food."
-
-                    );
-
-                }
-
-                foodSaved = true;
-
-                message.textContent =
-                    "✓ Food saved successfully! Check your dashboard.";
-
-                message.style.color = "#087f68";
-
-                saveButton.textContent =
-                    "✓ Food Saved Successfully";
-
-                saveButton.style.background = "#159d80";
-
-            } catch (error) {
-
-                message.textContent =
-                    error.message || "Unable to save food.";
-
-                message.style.color = "#c0392b";
-
-                saveButton.textContent =
-                    "💾 Save Food Analysis";
-
-            } finally {
-
-                isSaving = false;
-
-                updateButtonStatus();
+                throw new Error(
+                    data.message || "Unable to save food."
+                );
 
             }
 
+            isSaved = true;
+
+            message.textContent =
+                "✓ Food saved successfully! Check your dashboard.";
+
+            message.style.color = "#087f68";
+
+            saveButton.textContent =
+                "✓ Food Saved Successfully";
+
+        } catch (error) {
+
+            message.textContent = error.message;
+
+            message.style.color = "#c0392b";
+
+            saveButton.textContent =
+                "💾 Save Food Analysis";
+
+        } finally {
+
+            isSaving = false;
+
+            updateControls();
+
         }
 
-        // INITIAL PAGE LOAD
+    }
 
-        calculateNutrition();
+    quantityInput.addEventListener(
+        "input",
+        calculateNutrition
+    );
 
-        updateHealthScore(
-            initialHealthScore,
-            currentFoodName
+    foodSelect.addEventListener(
+        "change",
+        updateControls
+    );
+
+    document.querySelectorAll(
+        'input[name="mealType"]'
+    ).forEach(input => {
+
+        input.addEventListener(
+            "change",
+            updatePreview
         );
 
-        updateButtonStatus();
+    });
 
-    </script>
+    document.querySelectorAll(
+        ".prediction-button"
+    ).forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            if (isUpdating || isSaving || isSaved) return;
+
+            foodSelect.value = button.dataset.food;
+
+            updateFood();
+
+        });
+
+    });
+
+    calculateNutrition();
+
+    updateHealthScore(
+        currentHealthScore,
+        currentFoodName
+    );
+
+    updateControls();
+
+</script>
 
 </body>
-
 </html>
