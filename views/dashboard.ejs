@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | NutriVision AI</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eff8f4;
+            color: #243e35;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #075e4e;
+            color: white;
+            padding: 25px 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .brand-description {
+            font-size: 12px;
+            color: #b9e4d5;
+            margin-bottom: 35px;
+        }
+
+        .sidebar a,
+        .logout-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            text-align: left;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #159d80;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .logout-button {
+            border: 1px solid #71b9a6;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #a83e3e;
+        }
+
+        .dashboard-main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            color: #087f68;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+            background: #d8eee4;
+            color: #087f68;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #087f68, #42b89a);
+            color: white;
+            padding: 35px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-banner h1 {
+            font-size: 32px;
+            margin: 10px 0;
+            color: white;
+        }
+
+        .welcome-banner p {
+            color: #e3fff3;
+            line-height: 1.6;
+        }
+
+        .analyze-button {
+            display: inline-block;
+            background: white;
+            color: #087f68;
+            text-decoration: none;
+            padding: 15px 22px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            color: #087f68;
+            margin: 0;
+        }
+
+        .section-heading p {
+            color: #72877e;
+            font-size: 14px;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .nutrition-card {
+            background: white;
+            border: 1px solid #dceee5;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0, 80, 60, 0.05);
+            transition: 0.3s;
+        }
+
+        .nutrition-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .nutrition-icon {
+            width: 55px;
+            height: 55px;
+            background: #e5f5ed;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+        }
+
+        .nutrition-card p {
+            color: #72877e;
+            margin-bottom: 8px;
+        }
+
+        .nutrition-card h2 {
+            font-size: 30px;
+            color: #087f68;
+            margin: 8px 0;
+        }
+
+        .nutrition-card small {
+            color: #72877e;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #dff3e9;
+            padding: 22px;
+            border-radius: 15px;
+        }
+
+        .stat-card h2 {
+            color: #087f68;
+            margin: 10px 0;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 80, 60, 0.05);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #e7f5ed;
+            color: #087f68;
+            text-align: left;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #e6eee9;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f5fbf8;
+        }
+
+        .meal-badge {
+            background: #e2f4eb;
+            color: #087f68;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .delete-button {
+            background: #fff0f0;
+            color: #b83d3d;
+            border: none;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #fbd6d6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 35px;
+            color: #72877e;
+        }
+
+        .empty-state span {
+            font-size: 45px;
+        }
+
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .meal-panel {
+            border: 1px solid #d5e9df;
+            background: #f5fbf8;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .meal-panel h3 {
+            color: #087f68;
+            margin-top: 0;
+        }
+
+        .meal-food {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .meal-food strong {
+            color: #243e35;
+        }
+
+        .meal-food small {
+            display: block;
+            color: #72877e;
+            margin-top: 5px;
+        }
+
+        .meal-calories {
+            color: #087f68;
+            font-weight: bold;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .primary-button {
+            background: #087f68;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .primary-button:hover {
+            background: #056451;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .profile-field label {
+            display: block;
+            font-weight: bold;
+            color: #087f68;
+            margin-bottom: 10px;
+        }
+
+        .profile-field input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #c4ded2;
+            background: #f5fbf8;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .profile-field input:disabled {
+            color: #72877e;
+        }
+
+        .profile-actions {
+            margin-top: 20px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #72877e;
+            line-height: 1.7;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .menu-button {
+            display: none;
+            border: none;
+            background: #087f68;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #72877e;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1000px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .dashboard-main {
+                margin-left: 220px;
+                padding: 20px;
+            }
+
+            .nutrition-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 750px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                width: 250px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .dashboard-main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .welcome-banner {
+                padding: 25px;
+            }
+
+            .welcome-banner h1 {
+                font-size: 25px;
+            }
+
+            .stats-grid,
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nutrition-grid {
+                gap: 12px;
+            }
+
+            .nutrition-card {
+                padding: 18px;
+            }
+
+            .nutrition-card h2 {
+                font-size: 23px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">🌿 NutriVision AI</div>
+
+        <div class="brand-description">
+            AI POWERED FOOD INTELLIGENCE
+        </div>
+
+        <nav>
+
+            <a href="#dashboard" class="active">
+                🏠 Dashboard
+            </a>
+
+            <a href="/food-analysis">
+                📷 Analyze Food
+            </a>
+
+            <a href="#nutrition">
+                📊 Daily Nutrition
+            </a>
+
+            <a href="#history">
+                📋 Food History
+            </a>
+
+            <a href="#suggestions">
+                🍽️ Meal Suggestions
+            </a>
+
+            <a href="#profile">
+                👤 My Profile
+            </a>
+
+            <a href="/">
+                🌐 Home Page
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <form action="/logout" method="POST">
+
+                <button type="submit" class="logout-button">
+                    🚪 Logout
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+
+    <main class="dashboard-main" id="dashboard">
+
+        <header class="topbar">
+
+            <button
+                type="button"
+                class="menu-button"
+                id="menuButton"
+                aria-label="Toggle navigation"
+                aria-expanded="false">
+                ☰
+            </button>
+
+            <h2>My Dashboard</h2>
+
+            <a href="#profile" class="profile-avatar" id="avatar">
+
+                <%= (userName || "U").charAt(0).toUpperCase() %>
+
+            </a>
+
+        </header>
+
+        <!-- WELCOME BANNER -->
+
+        <section class="welcome-banner">
+
+            <div>
+
+                <small>YOUR PERSONAL NUTRITION SPACE</small>
+
+                <h1>
+                    Welcome, <span id="welcomeName"><%= userName %></span>! 👋
+                </h1>
+
+                <p>
+                    Discover your food, track your meals and
+                    build balanced eating habits with NutriVision AI.
+                </p>
+
+                <p id="todayDate"></p>
+
+            </div>
+
+            <a href="/food-analysis" class="analyze-button">
+
+                📷 Analyze Your Food
+
+            </a>
+
+        </section>
+
+        <!-- DAILY NUTRITION -->
+
+        <section id="nutrition">
+
+            <div class="section-heading">
+
+                <h2>📊 Today's Nutrition</h2>
+
+                <button
+                    class="primary-button"
+                    onclick="refreshDashboard()">
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+            <div class="nutrition-grid">
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🔥</div>
+
+                    <p>Total Calories</p>
+
+                    <h2 id="dailyCalories">
+                        <%= dailySummary.calories %> kcal
+                    </h2>
+
+                    <small>Energy consumed</small>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">💪</div>
+
+                    <p>Protein</p>
+
+                    <h2 id="dailyProtein">
+                        <%= dailySummary.protein %> g
+                    </h2>
+
+                    <small>Protein intake</small>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🌾</div>
+
+                    <p>Carbohydrates</p>
+
+                    <h2 id="dailyCarbs">
+                        <%= dailySummary.carbs %> g
+                    </h2>
+
+                    <small>Carbohydrate intake</small>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🥑</div>
+
+                    <p>Total Fat</p>
+
+                    <h2 id="dailyFat">
+                        <%= dailySummary.fat %> g
+                    </h2>
+
+                    <small>Fat intake</small>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🥦</div>
+
+                    <p>Dietary Fiber</p>
+
+                    <h2 id="dailyFiber">
+                        <%= dailySummary.fiber %> g
+                    </h2>
+
+                    <small>Fiber intake</small>
+
+                </div>
+
+                <div class="nutrition-card">
+
+                    <div class="nutrition-icon">🍬</div>
+
+                    <p>Total Sugar</p>
+
+                    <h2 id="dailySugar">
+                        <%= dailySummary.sugar %> g
+                    </h2>
+
+                    <small>Sugar intake</small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- STATISTICS -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <p>🍽️ Today's Food Entries</p>
+
+                <h2 id="todayMeals">
+                    <%= dailySummary.totalMeals %>
+                </h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <p>📋 Total Saved Foods</p>
+
+                <h2 id="totalAnalyses">
+                    <%= totalAnalyses %>
+                </h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <p>🥗 Supported Foods</p>
+
+                <h2>350+</h2>
+
+            </div>
+
+        </div>
+
+        <p id="dashboardMessage" class="status-message" role="status"></p>
+
+        <!-- FOOD HISTORY -->
+
+        <section class="panel" id="history">
+
+            <div class="section-heading">
+
+                <h2>📋 Your Food History</h2>
+
+                <a href="/food-analysis" class="primary-button"
+                    style="text-decoration:none;">
+                    + Analyze Food
+                </a>
+
+            </div>
+
+            <div class="table-container">
+
+                <table id="historyTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Food Name</th>
+                            <th>Meal Type</th>
+                            <th>Quantity</th>
+                            <th>Calories</th>
+                            <th>Protein</th>
+                            <th>Health Score</th>
+                            <th>Date</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="historyBody">
+
+                        <% history.forEach(food => { %>
+
+                            <tr>
+
+                                <td>
+                                    <strong><%= food.foodName %></strong>
+                                </td>
+
+                                <td>
+                                    <span class="meal-badge">
+                                        <%= food.mealType %>
+                                    </span>
+                                </td>
+
+                                <td><%= food.quantity %></td>
+
+                                <td><%= food.calories %> kcal</td>
+
+                                <td><%= food.protein %> g</td>
+
+                                <td>
+                                    <%= food.healthScore == null
+                                        ? "--"
+                                        : food.healthScore + "/100" %>
+                                </td>
+
+                                <td>
+                                    <%= new Date(food.createdAt)
+                                        .toLocaleDateString("en-IN", {
+                                            timeZone: "Asia/Kolkata"
+                                        }) %>
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        class="delete-button"
+                                        data-id="<%= food._id %>"
+                                        onclick="deleteFood(this.dataset.id, this)">
+                                        🗑 Delete
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        <% }); %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div id="emptyHistory"
+                class="empty-state"
+                <%= history.length ? "hidden" : "" %>>
+
+                <span>🍽️</span>
+
+                <h3>No food history yet</h3>
+
+                <p>
+                    Analyze your first food and save it to your diary.
+                </p>
+
+            </div>
+
+            <p class="note">
+                Showing your latest saved food entries.
+            </p>
+
+            <button
+                type="button"
+                class="primary-button"
+                onclick="loadHistory()">
+
+                View Recent History
+
+            </button>
+
+        </section>
+
+        <!-- MEAL SUGGESTIONS -->
+
+        <section class="panel" id="suggestions">
+
+            <div class="section-heading">
+
+                <h2>🍽️ Daily Meal Suggestions</h2>
+
+                <button
+                    class="primary-button"
+                    onclick="loadMealSuggestions()">
+
+                    ↻ New Suggestions
+
+                </button>
+
+            </div>
+
+            <p class="note">
+
+                Explore Indian breakfast, lunch, snacks and
+                dinner options from our food database.
+
+            </p>
+
+            <div class="meal-grid">
+
+                <div class="meal-panel">
+
+                    <h3>🌅 Breakfast</h3>
+
+                    <div id="breakfastList">
+                        Loading suggestions...
+                    </div>
+
+                </div>
+
+                <div class="meal-panel">
+
+                    <h3>☀️ Lunch</h3>
+
+                    <div id="lunchList">
+                        Loading suggestions...
+                    </div>
+
+                </div>
+
+                <div class="meal-panel">
+
+                    <h3>☕ Evening Snacks</h3>
+
+                    <div id="snacksList">
+                        Loading suggestions...
+                    </div>
+
+                </div>
+
+                <div class="meal-panel">
+
+                    <h3>🌙 Dinner</h3>
+
+                    <div id="dinnerList">
+                        Loading suggestions...
+                    </div>
+
+                </div>
+
+            </div>
+
+            <p class="note">
+
+                Nutrition values are approximate. These are general
+                food suggestions, not personalized medical diet plans.
+
+            </p>
+
+        </section>
+
+        <!-- USER PROFILE -->
+
+        <section class="panel" id="profile">
+
+            <div class="section-heading">
+
+                <h2>👤 My Profile</h2>
+
+            </div>
+
+            <form id="profileForm">
+
+                <div class="profile-grid">
+
+                    <div class="profile-field">
+
+                        <label for="profileName">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="profileName"
+                            value="<%= userName %>"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="profile-field">
+
+                        <label for="profileEmail">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="profileEmail"
+                            value="<%= email %>"
+                            disabled
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="profile-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                        id="profileButton">
+
+                        Save Profile
+
+                    </button>
+
+                </div>
+
+                <p id="profileMessage"
+                    class="status-message"
+                    role="status">
+                </p>
+
+            </form>
+
+        </section>
+
+        <footer>
+
+            © <%= new Date().getFullYear() %> NutriVision AI |
+            AI Powered Food Intelligence
+
+        </footer>
+
+    </main>
+
+    <script>
+
+        // MOBILE MENU
+
+        const sidebar = document.getElementById("sidebar");
+
+        const menuButton = document.getElementById("menuButton");
+
+        menuButton.addEventListener("click", () => {
+
+            const isOpen = sidebar.classList.toggle("open");
+
+            menuButton.setAttribute("aria-expanded", isOpen);
+
+        });
+
+        document.querySelectorAll(".sidebar a").forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                sidebar.classList.remove("open");
+
+                menuButton.setAttribute("aria-expanded", "false");
+
+                document.querySelectorAll(".sidebar a")
+                    .forEach(item => item.classList.remove("active"));
+
+                link.classList.add("active");
+
+            });
+
+        });
+
+        // TODAY'S DATE
+
+        document.getElementById("todayDate").textContent =
+            new Date().toLocaleDateString("en-IN", {
+
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                timeZone: "Asia/Kolkata"
+
+            });
+
+        // API HELPER
+
+        async function fetchData(url, options = {}) {
+
+            const response = await fetch(url, options);
+
+            if (response.status === 401) {
+
+                window.location.href = "/login";
+
+                throw new Error("Please login again.");
+
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message || "Something went wrong."
+                );
+
+            }
+
+            return data;
+
+        }
+
+        function showMessage(id, message, success = true) {
+
+            const element = document.getElementById(id);
+
+            element.textContent = message;
+
+            element.style.color = success
+                ? "#087f68"
+                : "#c0392b";
+
+        }
+
+        // DAILY NUTRITION TRACKING
+
+        async function loadDailySummary() {
+
+            const data = await fetchData("/api/daily-summary");
+
+            const summary = data.summary;
+
+            document.getElementById("dailyCalories")
+                .textContent = summary.calories + " kcal";
+
+            document.getElementById("dailyProtein")
+                .textContent = summary.protein + " g";
+
+            document.getElementById("dailyCarbs")
+                .textContent = summary.carbs + " g";
+
+            document.getElementById("dailyFat")
+                .textContent = summary.fat + " g";
+
+            document.getElementById("dailyFiber")
+                .textContent = summary.fiber + " g";
+
+            document.getElementById("dailySugar")
+                .textContent = summary.sugar + " g";
+
+            document.getElementById("todayMeals")
+                .textContent = summary.totalMeals;
+
+        }
+
+        // FOOD HISTORY
+
+        async function loadHistory() {
+
+            try {
+
+                const data = await fetchData("/api/history");
+
+                const history = data.history;
+
+                const tbody = document.getElementById("historyBody");
+
+                tbody.replaceChildren();
+
+                document.getElementById("emptyHistory").hidden =
+                    history.length > 0;
+
+                history.forEach(food => {
+
+                    const row = document.createElement("tr");
+
+                    const values = [
+
+                        food.foodName,
+
+                        food.mealType,
+
+                        food.quantity,
+
+                        food.calories + " kcal",
+
+                        food.protein + " g",
+
+                        food.healthScore == null
+                            ? "--"
+                            : food.healthScore + "/100",
+
+                        new Date(food.createdAt)
+                            .toLocaleDateString("en-IN", {
+                                timeZone: "Asia/Kolkata"
+                            })
+
+                    ];
+
+                    values.forEach((value, index) => {
+
+                        const cell = document.createElement("td");
+
+                        if (index === 1) {
+
+                            const badge = document.createElement("span");
+
+                            badge.className = "meal-badge";
+
+                            badge.textContent = value;
+
+                            cell.appendChild(badge);
+
+                        } else {
+
+                            cell.textContent = value;
+
+                        }
+
+                        row.appendChild(cell);
+
+                    });
+
+                    const actionCell = document.createElement("td");
+
+                    const deleteButton =
+                        document.createElement("button");
+
+                    deleteButton.className = "delete-button";
+
+                    deleteButton.textContent = "🗑 Delete";
+
+                    deleteButton.addEventListener("click", () => {
+
+                        deleteFood(food._id, deleteButton);
+
+                    });
+
+                    actionCell.appendChild(deleteButton);
+
+                    row.appendChild(actionCell);
+
+                    tbody.appendChild(row);
+
+                });
+
+            } catch (error) {
+
+                showMessage(
+                    "dashboardMessage",
+                    error.message,
+                    false
+                );
+
+            }
+
+        }
+
+        // DELETE FOOD RECORD
+
+        async function deleteFood(id, button) {
+
+            const confirmed = confirm(
+                "Are you sure you want to delete this food record?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                button.disabled = true;
+
+                await fetchData("/api/history/" + encodeURIComponent(id), {
+
+                    method: "DELETE"
+
+                });
+
+                const total = document.getElementById("totalAnalyses");
+
+                total.textContent = Math.max(
+                    0,
+                    Number(total.textContent) - 1
+                );
+
+                showMessage(
+                    "dashboardMessage",
+                    "✓ Food record deleted successfully!"
+                );
+
+                await Promise.all([
+
+                    loadHistory(),
+
+                    loadDailySummary()
+
+                ]);
+
+            } catch (error) {
+
+                showMessage(
+                    "dashboardMessage",
+                    error.message,
+                    false
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+            }
+
+        }
+
+        // REFRESH DASHBOARD
+
+        function refreshDashboard() {
+
+            window.location.reload();
+
+        }
+
+        // SHUFFLE MEAL SUGGESTIONS
+
+        function shuffleFoods(foods) {
+
+            const items = [...foods];
+
+            for (let i = items.length - 1; i > 0; i--) {
+
+                const j = Math.floor(Math.random() * (i + 1));
+
+                [items[i], items[j]] = [items[j], items[i]];
+
+            }
+
+            return items;
+
+        }
+
+        // MEAL SUGGESTIONS
+
+        async function loadMealSuggestions() {
+
+            const mealContainers = {
+
+                Breakfast: "breakfastList",
+
+                Lunch: "lunchList",
+
+                Snacks: "snacksList",
+
+                Dinner: "dinnerList"
+
+            };
+
+            try {
+
+                const data = await fetchData(
+                    "/api/meal-suggestions"
+                );
+
+                Object.keys(mealContainers).forEach(meal => {
+
+                    const container = document.getElementById(
+                        mealContainers[meal]
+                    );
+
+                    container.replaceChildren();
+
+                    const foods = shuffleFoods(
+                        data.suggestions[meal] || []
+                    ).slice(0, 5);
+
+                    if (!foods.length) {
+
+                        container.textContent =
+                            "No suggestions available.";
+
+                        return;
+
+                    }
+
+                    foods.forEach(food => {
+
+                        const card = document.createElement("div");
+
+                        card.className = "meal-food";
+
+                        const details = document.createElement("div");
+
+                        const name = document.createElement("strong");
+
+                        name.textContent = food.foodName;
+
+                        const serving = document.createElement("small");
+
+                        serving.textContent = food.nutrition.serving;
+
+                        details.appendChild(name);
+
+                        details.appendChild(serving);
+
+                        const calories = document.createElement("span");
+
+                        calories.className = "meal-calories";
+
+                        calories.textContent =
+                            food.nutrition.calories + " kcal";
+
+                        card.appendChild(details);
+
+                        card.appendChild(calories);
+
+                        container.appendChild(card);
+
+                    });
+
+                });
+
+            } catch (error) {
+
+                Object.values(mealContainers).forEach(id => {
+
+                    document.getElementById(id).textContent =
+                        "Unable to load suggestions.";
+
+                });
+
+            }
+
+        }
+
+        // UPDATE USER PROFILE
+
+        document.getElementById("profileForm")
+            .addEventListener("submit", async event => {
+
+                event.preventDefault();
+
+                const button =
+                    document.getElementById("profileButton");
+
+                const name = document
+                    .getElementById("profileName")
+                    .value.trim();
+
+                if (!name) {
+
+                    showMessage(
+                        "profileMessage",
+                        "Please enter your name.",
+                        false
+                    );
+
+                    return;
+
+                }
+
+                try {
+
+                    button.disabled = true;
+
+                    button.textContent = "Saving...";
+
+                    const data = await fetchData("/api/profile", {
+
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type": "application/json"
+
+                        },
+
+                        body: JSON.stringify({ name })
+
+                    });
+
+                    document.getElementById("welcomeName")
+                        .textContent = data.user.name;
+
+                    document.getElementById("profileName")
+                        .value = data.user.name;
+
+                    document.getElementById("avatar")
+                        .textContent = data.user.name
+                            .charAt(0).toUpperCase();
+
+                    showMessage(
+                        "profileMessage",
+                        "✓ Profile updated successfully!"
+                    );
+
+                } catch (error) {
+
+                    showMessage(
+                        "profileMessage",
+                        error.message,
+                        false
+                    );
+
+                } finally {
+
+                    button.disabled = false;
+
+                    button.textContent = "Save Profile";
+
+                }
+
+            });
+
+        // INITIAL DASHBOARD LOAD
+
+        loadMealSuggestions();
+
+    </script>
+
+</body>
+
+</html>

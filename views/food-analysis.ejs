@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Food Analysis | NutriVision AI</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="dashboard-page">
+    <nav class="dashboard-navbar">
+      <h2>🥗 NutriVision <span>AI</span></h2>
+      <div class="nav-right">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/">Home</a>
+      </div>
+    </nav>
+
+    <main class="dashboard-container">
+      <section class="dashboard-welcome">
+        <div>
+          <p class="welcome-tag">AI POWERED FOOD INTELLIGENCE</p>
+          <h1>Analyze Your Food 🍽️</h1>
+          <p>Upload a food image to explore its nutritional information.</p>
+        </div>
+        <div class="welcome-icon">🥗</div>
+      </section>
+
+      <section class="upload-section">
+        <div class="upload-card">
+          <h2>Upload Your Food Image</h2>
+          <p>Select a clear image of the food you want to analyze.</p>
+
+          <form
+            action="/analyze-food"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="upload-area">
+              <div class="upload-icon">📸</div>
+              <h3>Choose Food Image</h3>
+              <p>Upload JPG, PNG or WEBP image</p>
+
+              <input
+                type="file"
+                name="foodImage"
+                accept="image/png, image/jpeg, image/webp"
+                required
+              />
+            </div>
+
+            <button type="submit" class="dashboard-btn">Analyze Food</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="dashboard-footer">
+      © 2026 NutriVision AI | Smart Food, Healthy Life
+    </footer>
+  </body>
+</html>
